@@ -6,15 +6,6 @@ class User:
         self.name = name
         self.email = email
 
-    @staticmethod
-    def connect_db():
-        return mysql.connector.connect(
-            host="localhost",
-            user="yourusername",
-            password="yourpassword",
-            database="megatrip"
-        )
-
     def save_to_db(self):
         db = self.connect_db()
         cursor = db.cursor()
