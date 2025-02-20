@@ -1,0 +1,54 @@
+import mysql.connector
+from datetime import datetime
+from trip import Trip
+
+class TripManager:
+    @staticmethod
+    def connect_db():
+        return mysql.connector.connect(
+            host="localhost",
+            user="yourusername",
+            password="yourpassword",
+            database="megatrip"
+        )
+
+    @staticmethod
+    def get_recent_trips(limit=10):
+        """Get the most recent trips from database"""
+        try:
+            db = TripManager.connect_db()
+            cursor = db.cursor(dictionary=True)
+            
+            query = """
+                SELECT trips.*, users.name as creator_name 
+                FROM trips 
+                JOIN users ON trips.creator_id = users.user_id 
+                ORDER BY trips.created_at DESC 
+                LIMIT %s
+            """
+            cursor.execute(query, (limit,))
+            trips_data = cursor.fetchall()
+            
+            # Convert database records to Trip objects
+            trips = []
+            for data in trips_data:
+                trip = Trip(
+                    data['trip_id'],
+                    data['name'],
+                    data['destination'],
+                    data['start_date'],
+                    data['end_date'],
+                    data['creator_id']
+                )
+                trips.append(trip)
+            
+            return trips
+            
+        except mysql.connector.Error as err:
+            print(f"Database error: {err}")
+            return []
+            
+        finally:
+            if 'db' in locals() and db.is_connected():
+                cursor.close()
+                db.close()
