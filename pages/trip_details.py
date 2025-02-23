@@ -1,5 +1,6 @@
 import streamlit as st
 from trip_manager import TripManager
+from controller import handle_save_trip, handle_cancel_edit, handle_back_to_home
 
 def show_trip_details_page():
     if st.session_state.current_trip_id:
@@ -18,18 +19,10 @@ def show_trip_details_page():
                 new_note = st.text_area("Note", value=trip.note)
                 
                 if st.button("Save"):
-                    trip.name = new_name
-                    trip.destination = new_destination
-                    trip.start_date = new_start_date
-                    trip.end_date = new_end_date
-                    trip.status = new_status
-                    trip.note = new_note
-                    TripManager.update_trip(trip)
-                    st.session_state.edit_mode = False
-                    st.success("Trip details updated successfully")
+                    handle_save_trip(trip, new_name, new_destination, new_start_date, new_end_date, new_status, new_note)
                 
                 if st.button("Cancel"):
-                    st.session_state.edit_mode = False
+                    handle_cancel_edit()
             else:
                 st.title(f"Trip Details: {trip.name}")
                 st.write(f"🌍 Destination: {trip.destination}")
@@ -48,11 +41,10 @@ def show_trip_details_page():
                     st.session_state.edit_mode = True
                 
                 if st.button("Back to Home"):
-                    st.session_state.page = "home"
-                    st.session_state.current_trip_id = None
+                    handle_back_to_home()
         else:
             st.error("Trip not found")
-            st.session_state.page = "home"
+            handle_back_to_home()
     else:
         st.error("No trip selected")
-        st.session_state.page = "home"
+        handle_back_to_home()
