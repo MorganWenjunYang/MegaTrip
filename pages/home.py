@@ -1,5 +1,6 @@
 import streamlit as st
 from trip import Trip
+from trip_manager import TripManager
 
 def show_home_page():
     st.success(f"Logged in as {st.session_state.username}")
@@ -8,25 +9,11 @@ def show_home_page():
 def show_recent_trips():
     st.header("Recent Trips")
     
-    if not st.session_state.trips:
+    recent_trips = TripManager.get_recent_trips()  # Fetch recent trips from trip_manager
+    
+    if not recent_trips:
         st.write("No trips found.")
         return
         
-    sorted_trips = sorted(
-        st.session_state.trips, 
-        key=lambda x: x['created_at'], 
-        reverse=True
-    )
-    
-    for trip_data in sorted_trips[:10]:
-        trip = Trip(
-            trip_id=trip_data['trip_id'],
-            name=trip_data['name'],
-            destination=trip_data['destination'],
-            start_date=trip_data['start_date'],
-            end_date=trip_data['end_date'],
-            creator_id=trip_data['creator_id']
-        )
-        for participant in trip_data['participants']:
-            trip.add_participant(participant)
+    for trip in recent_trips[:10]:
         trip.display_in_streamlit()

@@ -8,7 +8,7 @@ def connect_to_db():
 def execute_query(query, params=None, fetch=True):
     """Execute a query and optionally return results"""
     conn = connect_to_db()
-    cursor = conn.cursor()
+    cursor = conn.cursor(dictionary=True)
     try:
         cursor.execute(query, params or ())
         if fetch:

@@ -1,87 +1,68 @@
-import mysql.connector
 from datetime import datetime
 from trip import Trip
 import streamlit as st
+from utils import execute_query
 
 class TripManager:
     @staticmethod
-    def connect_db():
-        return mysql.connector.connect(
-            host="localhost",
-            user="yourusername",
-            password="yourpassword",
-            database="megatrip"
-        )
-
-    @staticmethod
     def get_recent_trips(limit=10):
         """Get the most recent trips from database"""
-        try:
-            db = TripManager.connect_db()
-            cursor = db.cursor(dictionary=True)
-            
-            query = """
-                SELECT trips.*, users.name as creator_name 
-                FROM trips 
-                JOIN users ON trips.creator_id = users.user_id 
-                ORDER BY trips.created_at DESC 
-                LIMIT %s
-            """
-            cursor.execute(query, (limit,))
-            trips_data = cursor.fetchall()
-            
-            # Convert database records to Trip objects
-            trips = []
-            for data in trips_data:
-                trip = Trip(
-                    data['trip_id'],
-                    data['name'],
-                    data['destination'],
-                    data['start_date'],
-                    data['end_date'],
-                    data['creator_id']
-                )
-                trips.append(trip)
-            
-            return trips
-            
-        except mysql.connector.Error as err:
-            print(f"Database error: {err}")
-            return []
-            
-        finally:
-            if 'db' in locals() and db.is_connected():
-                cursor.close()
-                db.close()
+        query = """
+            SELECT trips.*, username as creator_name 
+            FROM trips 
+            JOIN users ON trips.creator_id = users.user_id 
+            ORDER BY trips.created_at DESC 
+            LIMIT %s
+        """
+        trips_data = execute_query(query, (limit,))
+        
+        # Convert database records to Trip objects
+        trips = []
+        for data in trips_data:
+            trip = Trip(
+                data['trip_id'],
+                data['name'],
+                data['destination'],
+                data['start_date'],
+                data['end_date'],
+                data['creator_id']
+            )
+            trips.append(trip)
+        
+        return trips
 
     @staticmethod
     def get_trip_by_id(trip_id):
-        """Get a trip by its ID from in-memory data"""
-        for trip_data in st.session_state.trips:
-            if trip_data['trip_id'] == trip_id:
-                trip = Trip(
-                    trip_id=trip_data['trip_id'],
-                    name=trip_data['name'],
-                    destination=trip_data['destination'],
-                    start_date=trip_data['start_date'],
-                    end_date=trip_data['end_date'],
-                    creator_id=trip_data['creator_id']
-                )
-                trip.status = trip_data['status']
-                trip.note = trip_data['note']
-                for participant in trip_data['participants']:
-                    trip.add_participant(participant)
-                return trip
-        return None
-
-    @staticmethod
-    def update_trip(updated_trip):
-        for trip_data in st.session_state.trips:
-            if trip_data['trip_id'] == updated_trip.trip_id:
-                trip_data['name'] = updated_trip.name
-                trip_data['destination'] = updated_trip.destination
-                trip_data['start_date'] = updated_trip.start_date
-                trip_data['end_date'] = updated_trip.end_date
-                trip_data['status'] = updated_trip.status
-                trip_data['note'] = updated_trip.note
-                break
+        """Get a trip by its ID from database"""
+        query = """
+            SELECT t.*, u.username as creator_name,
+            GROUP_CONCAT(tp.user_id) as participants
+            FROM trips t
+            JOIN users u ON t.creator_id = u.user_id
+            LEFT JOIN trip_participants tp ON t.trip_id = tp.trip_id
+            WHERE t.trip_id = %s
+            GROUP BY t.trip_id
+        """
+        trip_data = execute_query(query, (trip_id,))
+        
+        if not trip_data or len(trip_data) == 0:
+            return None
+            
+        data = trip_data[0]  # Get first row since we're querying by primary key
+        trip = Trip(
+            trip_id=data['trip_id'],
+            name=data['name'],
+            destination=data['destination'],
+            start_date=data['start_date'],
+            end_date=data['end_date'],
+            creator_id=data['creator_id']
+        )
+        trip.status = data['status']
+        trip.note = data['note']
+        
+        # Add participants if any exist
+        if data['participants']:
+            for participant_id in data['participants'].split(','):
+                trip.add_participant(participant_id)
+                
+        return trip
