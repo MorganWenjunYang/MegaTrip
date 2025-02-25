@@ -20,6 +20,7 @@ def show_login_page():
         if user:
             st.session_state.logged_in = True
             st.session_state.username = username
+            st.session_state.user_id = user[0]['user_id']
             st.success("Logged in as {}".format(username))
             st.rerun()
         else:
