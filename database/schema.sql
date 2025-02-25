@@ -1,5 +1,5 @@
-create database metatrip;
-use metatrip;
+create database megatrip;
+use megatrip;
 
 -- Users table to store user credentials
 CREATE TABLE users (
