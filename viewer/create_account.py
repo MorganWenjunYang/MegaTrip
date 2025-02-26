@@ -1,5 +1,6 @@
 import streamlit as st
 from utils import execute_query
+from user_manager import UserManager
 
 def show_create_account_page():
     # Title and welcome message
@@ -16,13 +17,11 @@ def show_create_account_page():
 
     if create_account_button:
         if new_username and new_password:
-            query = "SELECT * FROM users WHERE username = %s"
-            user = execute_query(query, (new_username,))
+            user = UserManager.get_user_by_name(new_username)
             if user:
                 st.error("Username already exists")
             else:
-                query = "INSERT INTO users (username, password) VALUES (%s, %s)"
-                execute_query(query, (new_username, new_password), fetch=False)
+                user_id = UserManager.create_user(new_username, new_password)
                 st.success("Account created for {}".format(new_username))
                 st.session_state.page = "login"
                 st.rerun()

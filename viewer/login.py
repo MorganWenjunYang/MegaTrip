@@ -1,5 +1,6 @@
 import streamlit as st
 from utils import execute_query
+from user_manager import UserManager
 
 def show_login_page():
     form_container = st.sidebar.empty()
@@ -15,12 +16,11 @@ def show_login_page():
         create_new_button = st.sidebar.button("New User?", use_container_width=True)
 
     if login_button:
-        query = "SELECT * FROM users WHERE username = %s AND password = %s"
-        user = execute_query(query, (username, password))
+        user = UserManager.get_user(username, password)
         if user:
             st.session_state.logged_in = True
             st.session_state.username = username
-            st.session_state.user_id = user[0]['user_id']
+            st.session_state.user_id = user['user_id']
             st.success("Logged in as {}".format(username))
             st.rerun()
         else:
