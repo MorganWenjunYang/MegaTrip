@@ -22,7 +22,6 @@ st.logo(
     icon_image="./assets/logo.jpg",
 )
 
-# print(st.session_state)
 # Page routing
 if not st.session_state.logged_in:
     if st.session_state.page == "login":
