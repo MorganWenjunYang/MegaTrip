@@ -53,20 +53,4 @@ class Trip:
             "note": self.note  # include note in details
         }
      
-    def display_in_streamlit(self):
-        """Display trip details in Streamlit format"""
-        with st.container():
-            col1, col2 = st.columns([3, 1])
-            with col1:
-                st.subheader(self.name)
-                st.write(f"🌍 Destination: {self.destination}")
-                st.write(f"📅 {self.start_date} to {self.end_date}")
-                st.write(f"📌 Status: {self.status}")  # display status
-                if self.note:
-                    st.write(f"📝 Note: {self.note}")  # display note if available
-                if self.participants:
-                    st.write(f"👥 Participants: {', '.join(self.participants)}")  # display user IDs
-            with col2:
-                if st.button("View Details", key=f"trip_{self.trip_id}"):
-                    st.session_state.current_trip_id = self.trip_id
-                    st.session_state.page = "trip_details"
+    

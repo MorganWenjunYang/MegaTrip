@@ -1,7 +1,7 @@
 import streamlit as st
 from trip import Trip
 from trip_manager import TripManager
-from viewer.sidebar import show_sidebar 
+from viewer.stutils import show_sidebar, show_trip_short
 
 def show_home_page():
     st.success(f"Logged in as {st.session_state.username}")
@@ -23,4 +23,4 @@ def show_recent_trips():
         return
         
     for trip in recent_trips[:10]:
-        trip.display_in_streamlit()
+        show_trip_short(trip)

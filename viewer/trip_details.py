@@ -1,7 +1,7 @@
 import streamlit as st
 from trip_manager import TripManager
 from controller import handle_save_trip, handle_cancel_edit, handle_back_to_home
-from viewer.sidebar import show_sidebar  
+from viewer.stutils import show_sidebar, show_trip_details
 
 def show_trip_details_page():
     show_sidebar()
@@ -12,38 +12,52 @@ def show_trip_details_page():
                 st.session_state.edit_mode = False
 
             if st.session_state.edit_mode:
-                st.title(f"Edit Trip: {trip.name}")
-                new_name = st.text_input("Trip Name", value=trip.name)
-                new_destination = st.text_input("Destination", value=trip.destination)
-                new_start_date = st.date_input("Start Date", value=trip.start_date)
-                new_end_date = st.date_input("End Date", value=trip.end_date)
-                new_status = st.selectbox("Status", ["Active", "Planned", "Completed"], index=["Active", "Planned", "Completed"].index(trip.status))
-                new_note = st.text_area("Note", value=trip.note)
+                st.header(f"Edit Trip: {trip.name}")
                 
-                if st.button("Save"):
-                    handle_save_trip(trip, new_name, new_destination, new_start_date, new_end_date, new_status, new_note)
-                
-                if st.button("Cancel"):
-                    handle_cancel_edit()
+                with st.form("edit_trip_form"):
+                    new_name = st.text_input("Trip Name", value=trip.name)
+                    new_destination = st.text_input("Destination", value=trip.destination)
+                    col1, col2 = st.columns(2)
+                    with col1:
+                        new_start_date = st.date_input("Start Date", value=trip.start_date)
+                    with col2:
+                        new_end_date = st.date_input("End Date", value=trip.end_date)
+                    
+                    new_status = st.selectbox(
+                        "Status",
+                        options=["Planning", "Ongoing", "Completed", "Cancelled"],
+                        index=["Planning", "Ongoing", "Completed", "Cancelled"].index(trip.status)
+                    )
+                    
+                    new_note = st.text_area("Notes", value=trip.note)
+                    
+                    # Item management
+                    st.subheader("Items")
+                    if not hasattr(trip, 'items'):
+                        trip.items = []
+                    
+                    for idx, item in enumerate(trip.items):
+                        st.text(f"• {item}")
+                    
+                    col1, col2 = st.columns([3, 1])
+                    with col1:
+                        new_item = st.text_input("Add an item", key="new_item")
+                    with col2:
+                        add_item = st.form_submit_button("+ Add", type="secondary")
+                        if add_item and new_item:
+                            trip.items.append(new_item)
+                            st.rerun()
+                    
+                    col1, col2 = st.columns(2)
+                    with col1:
+                        if st.form_submit_button("Save"):
+                            handle_save_trip(trip, new_name, new_destination, new_start_date, 
+                                          new_end_date, new_status, new_note)
+                    with col2:
+                        if st.form_submit_button("Cancel"):
+                            handle_cancel_edit()
             else:
-                st.title(f"Trip Details: {trip.name}")
-                st.write(f"🌍 Destination: {trip.destination}")
-                st.write(f"📅 {trip.start_date} to {trip.end_date}")
-                st.write(f"📌 Status: {trip.status}")
-                if trip.note:
-                    st.write(f"📝 Note: {trip.note}")
-                if trip.participants:
-                    st.write(f"👥 Participants: {', '.join(trip.participants)}")
-                if trip.items:
-                    st.write("📋 Items:")
-                    for item in trip.items:
-                        st.write(f"- {item.name}")
-                
-                if st.button("Edit"):
-                    st.session_state.edit_mode = True
-                
-                if st.button("Back to Home"):
-                    handle_back_to_home()
+                show_trip_details(trip)
         else:
             st.error("Trip not found")
             handle_back_to_home()

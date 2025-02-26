@@ -2,11 +2,15 @@ import streamlit as st
 from datetime import datetime
 from trip import Trip
 from trip_manager import TripManager
-from viewer.sidebar import show_sidebar
+from viewer.stutils import show_sidebar
 
 def show_create_trip_page():
     show_sidebar()
     st.header("Create New Trip")
+    
+    # Initialize items list in session state if not exists
+    if 'trip_items' not in st.session_state:
+        st.session_state.trip_items = []
     
     with st.form("new_trip_form"):
         name = st.text_input("Trip Name", key="trip_name")
@@ -24,6 +28,20 @@ def show_create_trip_page():
         )
         
         note = st.text_area("Notes", key="note")
+        
+        # Add items section
+        st.subheader("Items")
+        for idx, item in enumerate(st.session_state.trip_items):
+            st.text(f"• {item}")
+        
+        col1, col2 = st.columns([3, 1])
+        with col1:
+            new_item = st.text_input("Add an item", key="new_item")
+        with col2:
+            add_item = st.form_submit_button("+ Add", type="secondary")
+            if add_item and new_item:
+                st.session_state.trip_items.append(new_item)
+                st.rerun()
         
         submit = st.form_submit_button("Create Trip")
         
@@ -43,10 +61,12 @@ def show_create_trip_page():
                 end_date=end_date,
                 status=status,
                 note=note,
-                owner=st.session_state.username
+                owner=st.session_state.username,
+                items=st.session_state.trip_items  # Include items in trip creation
             )
             
             TripManager.create_trip(new_trip)
+            st.session_state.trip_items = []  # Clear items after creation
             st.success("Trip created successfully!")
             st.session_state.page = None  # Return to home page
             st.rerun()
