@@ -66,3 +66,16 @@ class TripManager:
                 trip.add_participant(participant_id)
                 
         return trip
+    
+    @staticmethod
+    def create_trip(name, destination, start_date, end_date, creator_id):
+        pass
+
+    @staticmethod
+    def delete_trip(trip_id):
+        pass
+
+    @staticmethod
+    def update_trip(trip):
+        pass    
+
