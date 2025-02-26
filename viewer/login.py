@@ -11,8 +11,8 @@ def show_login_page():
         st.sidebar.title("Login")
         username = st.sidebar.text_input("Username")
         password = st.sidebar.text_input("Password", type="password")
-        login_button = st.sidebar.button("Login")
-        create_new_button = st.sidebar.button("New User?")
+        login_button = st.sidebar.button("Login", use_container_width=True)
+        create_new_button = st.sidebar.button("New User?", use_container_width=True)
 
     if login_button:
         query = "SELECT * FROM users WHERE username = %s AND password = %s"

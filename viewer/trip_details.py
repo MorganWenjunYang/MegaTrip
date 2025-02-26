@@ -1,8 +1,10 @@
 import streamlit as st
 from trip_manager import TripManager
 from controller import handle_save_trip, handle_cancel_edit, handle_back_to_home
+from viewer.sidebar import show_sidebar  
 
 def show_trip_details_page():
+    show_sidebar()
     if st.session_state.current_trip_id:
         trip = TripManager.get_trip_by_id(st.session_state.current_trip_id)
         if trip:

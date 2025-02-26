@@ -11,8 +11,8 @@ def show_create_account_page():
         st.sidebar.title("Create New Account")
         new_username = st.sidebar.text_input("New Username")
         new_password = st.sidebar.text_input("New Password", type="password")
-        create_account_button = st.sidebar.button("Create Account")
-        back_to_login_button = st.sidebar.button("Back to Login")
+        create_account_button = st.sidebar.button("Create Account", use_container_width=True)
+        back_to_login_button = st.sidebar.button("Back to Login", use_container_width=True)
 
     if create_account_button:
         if new_username and new_password:
