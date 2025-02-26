@@ -27,3 +27,17 @@ def handle_cancel_edit():
 def handle_back_to_home():
     st.session_state.page = "home"
     st.session_state.current_trip_id = None
+
+# def handle_create_trip(name, destination, start_date, end_date, status, note):
+#     new_trip = Trip(
+#         name=name,
+#         destination=destination,
+#         start_date=start_date,
+#         end_date=end_date,
+#         status=status,
+#         note=note,
+#         owner=st.session_state.username
+#     )
+#     TripManager.create_trip(new_trip)
+#     st.session_state.page = None
+#     st.success("Trip created successfully!")

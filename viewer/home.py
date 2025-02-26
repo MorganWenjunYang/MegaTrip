@@ -6,6 +6,11 @@ from viewer.sidebar import show_sidebar
 def show_home_page():
     st.success(f"Logged in as {st.session_state.username}")
     show_sidebar()
+    
+    if st.button("New Trip +", key="new_trip", help="Create a new trip"):
+        st.session_state.page = "create_trip"
+        st.rerun()
+    
     show_recent_trips()
 
 def show_recent_trips():

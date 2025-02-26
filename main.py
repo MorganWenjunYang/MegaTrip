@@ -3,7 +3,7 @@ from trip_manager import TripManager
 from trip import Trip
 from item import Item 
 from user import User
-from viewer import create_account, login, profile, trip_details, home, profile
+from viewer import create_account, login, profile, trip_details, home, profile, create_trip
 
 # Initialize session state
 if 'logged_in' not in st.session_state:
@@ -33,6 +33,8 @@ else:
     if st.session_state.page == "trip_details":
         trip_details.show_trip_details_page()
     elif st.session_state.page == "profile":
-        profile.show_profile_page()   
+        profile.show_profile_page()  
+    elif st.session_state.page == "create_trip":
+        create_trip.show_create_trip_page()   
     else:
         home.show_home_page()
