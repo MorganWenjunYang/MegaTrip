@@ -31,7 +31,7 @@ def show_trip_details(trip):
     
     if st.button("Edit"):
         st.session_state.edit_mode = True
-        set.rerun()
+        st.rerun()
     
     if st.button("Back to Home"):
         handle_back_to_home()
