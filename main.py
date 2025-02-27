@@ -1,5 +1,5 @@
 import streamlit as st
-from trip_manager import TripManager
+from model.trip_manager import TripManager
 from model.trip import Trip
 from model.item import Item 
 from model.user import User

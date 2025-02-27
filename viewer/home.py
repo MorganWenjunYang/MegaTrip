@@ -1,6 +1,6 @@
 import streamlit as st
 from model.trip import Trip
-from trip_manager import TripManager
+from model.trip_manager import TripManager
 from viewer.stutils import show_sidebar, show_trip_short
 
 def show_home_page():

@@ -1,5 +1,5 @@
 import streamlit as st
-from controller import handle_save_trip, handle_cancel_edit, handle_back_to_home
+from controller.controller import handle_save_trip, handle_cancel_edit, handle_back_to_home
 
 def show_sidebar():
     with st.sidebar:

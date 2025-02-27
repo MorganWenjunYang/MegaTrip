@@ -1,5 +1,5 @@
 from model.item import Item
-from utils import execute_query
+from model.utils import execute_query
 
 class ItemManager:
     

@@ -1,5 +1,5 @@
 import mysql.connector
-import utils
+import model.utils as utils
 
 class User:
     def __init__(self, user_id, username):

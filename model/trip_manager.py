@@ -1,7 +1,7 @@
 from datetime import datetime
 from model.trip import Trip
 import streamlit as st
-from utils import execute_query
+from model.utils import execute_query
 
 class TripManager:
     @staticmethod

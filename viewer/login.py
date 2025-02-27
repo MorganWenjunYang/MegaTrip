@@ -1,6 +1,6 @@
 import streamlit as st
-from utils import execute_query
-from user_manager import UserManager
+from model.utils import execute_query
+from model.user_manager import UserManager
 
 def show_login_page():
     form_container = st.sidebar.empty()

@@ -1,6 +1,6 @@
 import streamlit as st
-from trip_manager import TripManager
-from utils import execute_query
+from model.trip_manager import TripManager
+from model.utils import execute_query
 from viewer.home import show_sidebar  # Import the show_sidebar function
 
 def show_profile_page():

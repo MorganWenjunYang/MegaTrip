@@ -1,5 +1,5 @@
 import streamlit as st
-from trip_manager import TripManager
+from model.trip_manager import TripManager
 
 def handle_view_details(trip_id):
     st.session_state.current_trip_id = trip_id

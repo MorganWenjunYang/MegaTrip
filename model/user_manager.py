@@ -1,5 +1,5 @@
 from model.user import User
-from utils import execute_query
+from model.utils import execute_query
 
 class UserManager:
     @staticmethod

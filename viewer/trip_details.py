@@ -1,6 +1,7 @@
 import streamlit as st
-from trip_manager import TripManager
-from controller import handle_save_trip, handle_cancel_edit, handle_back_to_home
+from model.trip import Trip
+from model.trip_manager import TripManager
+from controller.controller import handle_save_trip, handle_cancel_edit, handle_back_to_home
 from viewer.stutils import show_sidebar, show_trip_details
 
 def show_trip_details_page():
