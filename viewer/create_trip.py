@@ -1,7 +1,7 @@
 import streamlit as st
 from datetime import datetime, time
-from trip import Trip
-from item import Item
+from model.trip import Trip
+from model.item import Item
 from trip_manager import TripManager
 from viewer.stutils import show_sidebar
 

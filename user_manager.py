@@ -1,4 +1,4 @@
-from user import User
+from model.user import User
 from utils import execute_query
 
 class UserManager:

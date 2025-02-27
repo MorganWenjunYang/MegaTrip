@@ -1,8 +1,8 @@
 import streamlit as st
 from trip_manager import TripManager
-from trip import Trip
-from item import Item 
-from user import User
+from model.trip import Trip
+from model.item import Item 
+from model.user import User
 from viewer import create_account, login, profile, trip_details, home, profile, create_trip
 
 # Initialize session state

@@ -17,6 +17,7 @@ def handle_save_trip(trip, new_name, new_destination, new_start_date, new_end_da
     trip.end_date = new_end_date
     trip.status = new_status
     trip.note = new_note
+    # Items are already updated in the trip object
     TripManager.update_trip(trip)
     st.session_state.edit_mode = False
     st.success("Trip details updated successfully")

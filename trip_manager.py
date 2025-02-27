@@ -1,5 +1,5 @@
 from datetime import datetime
-from trip import Trip
+from model.trip import Trip
 import streamlit as st
 from utils import execute_query
 

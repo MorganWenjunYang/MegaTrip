@@ -1,5 +1,5 @@
 import streamlit as st
-from trip import Trip
+from model.trip import Trip
 from trip_manager import TripManager
 from viewer.stutils import show_sidebar, show_trip_short
 

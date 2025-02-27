@@ -1,4 +1,4 @@
-from item import Item
+from model.item import Item
 from utils import execute_query
 
 class ItemManager:
