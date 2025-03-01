@@ -1,5 +1,6 @@
 import streamlit as st
 from model.trip_manager import TripManager
+from model.user_manager import UserManager
 from model.utils import execute_query
 from viewer.home import show_sidebar  # Import the show_sidebar function
 
@@ -22,14 +23,8 @@ def show_profile_page():
 
 def show_created_trips():
     st.subheader("Trips You Created")
-    query = """
-        SELECT t.*
-        FROM trips t 
-                WHERE t.creator_id = %s 
-                ORDER BY t.created_at DESC
-    """
-    trips = execute_query(query, (st.session_state.user_id,))  # Use user_id instead of username
-    
+
+    trips = UserManager.get_created_trips(st.session_state.user_id)  # Use the get_created_trips method from UserManager
     if not trips:
         st.write("You haven't created any trips yet.")
         return
@@ -52,14 +47,8 @@ def show_created_trips():
 
 def show_participated_trips():
     st.subheader("Trips You're Participating In")
-    query = """
-        SELECT t.* 
-        FROM trips t 
-        JOIN trip_participants tp ON t.trip_id = tp.trip_id 
-                WHERE tp.user_id = %s 
-        ORDER BY t.created_at DESC
-    """
-    trips = execute_query(query, (st.session_state.user_id,))
+
+    trips = UserManager.get_participated_trips(st.session_state.user_id)  # Use the get_participated_trips method from UserManager
     
     if not trips:
         st.write("You're not participating in any trips created by others.")

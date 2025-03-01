@@ -58,3 +58,25 @@ class UserManager:
         """
         execute_query(query, (user_id,), fetch=False)
     
+
+    @staticmethod
+    def get_created_trips(user_id):
+        """Get all trips created by a user"""
+        query = """
+            SELECT * FROM trips WHERE creator_id = %s
+        """
+        trips_data = execute_query(query, (user_id,))
+        return trips_data
+    
+    @staticmethod
+    def get_participated_trips(user_id):
+        """Get all trips participated by a user"""
+        query = """
+            SELECT t.* 
+            FROM trips t 
+            JOIN trip_participants tp ON t.trip_id = tp.trip_id 
+                    WHERE tp.user_id = %s 
+            ORDER BY t.created_at DESC
+        """
+        trips_data = execute_query(query, (user_id,))
+        return trips_data
