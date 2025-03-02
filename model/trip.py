@@ -1,13 +1,14 @@
 import streamlit as st
 
 class Trip:
-    def __init__(self, trip_id, name, destination, start_date, end_date, creator_id):
+    def __init__(self, trip_id, name, destination, start_date, end_date, creator_id, created_at=None, status="Active", note=""):
         self.trip_id = trip_id
         self.name = name
         self.destination = destination
         self.start_date = start_date
         self.end_date = end_date
         self.creator_id = creator_id
+        self.created_at = None  # new attribute for created date
         self.participants = []  # list of user IDs
         self.items = []  # list of activities/items in the trip
         self.status = "Active"  # new attribute for trip status

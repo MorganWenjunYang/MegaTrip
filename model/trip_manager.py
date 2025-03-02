@@ -1,7 +1,7 @@
 from datetime import datetime
 from model.trip import Trip
 import streamlit as st
-from model.utils import execute_query
+from model.utils import execute_query, ModelConverter
 
 class TripManager:
     @staticmethod
@@ -19,14 +19,7 @@ class TripManager:
         # Convert database records to Trip objects
         trips = []
         for data in trips_data:
-            trip = Trip(
-                data['trip_id'],
-                data['name'],
-                data['destination'],
-                data['start_date'],
-                data['end_date'],
-                data['creator_id']
-            )
+            trip = ModelConverter.to_trip(data)
             trips.append(trip)
         
         return trips
@@ -49,16 +42,7 @@ class TripManager:
             return None
             
         data = trip_data[0]  # Get first row since we're querying by primary key
-        trip = Trip(
-            trip_id=data['trip_id'],
-            name=data['name'],
-            destination=data['destination'],
-            start_date=data['start_date'],
-            end_date=data['end_date'],
-            creator_id=data['creator_id']
-        )
-        trip.status = data['status']
-        trip.note = data['note']
+        trip = ModelConverter.to_trip(data)
         
         # Add participants if any exist
         if data['participants']:

@@ -50,11 +50,12 @@ class ModelConverter:
             destination=db_record['destination'],
             start_date=db_record['start_date'],
             end_date=db_record['end_date'],
-            status=db_record['status'],
             creator_id=db_record['creator_id'],
-            note=db_record.get('note'),
-            items=items or [],
-            participants=participants or [],
+            created_at=db_record['created_at'],
+            status=db_record['status'],
+            note=db_record['note'],
+            # items=items or [],
+            # participants=participants or [],
             # created_at=db_record.get('created_at')
         )
 

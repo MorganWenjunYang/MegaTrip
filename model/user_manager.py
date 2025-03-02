@@ -66,7 +66,10 @@ class UserManager:
             SELECT * FROM trips WHERE creator_id = %s
         """
         trips_data = execute_query(query, (user_id,))
-        return trips_data
+        trips = []
+        for trip in trips_data:
+            trips.append(ModelConverter.to_trip(trip))
+        return trips
     
     @staticmethod
     def get_participated_trips(user_id):
@@ -79,4 +82,7 @@ class UserManager:
             ORDER BY t.created_at DESC
         """
         trips_data = execute_query(query, (user_id,))
-        return trips_data
+        trips = []
+        for trip in trips_data:
+            trips.append(ModelConverter.to_trip(trip))
+        return trips
