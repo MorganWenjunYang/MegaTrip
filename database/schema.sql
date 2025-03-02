@@ -35,26 +35,22 @@ CREATE TABLE trip_participants (
 
 -- Create items table with all attributes from Item class
 CREATE TABLE items (
-    item_id INT AUTO_INCREMENT PRIMARY KEY,
+    item_id INT PRIMARY KEY AUTO_INCREMENT,
     trip_id INT NOT NULL,
     name VARCHAR(100) NOT NULL,
     description TEXT,
-    date DATE NOT NULL,
-    start_time TIME,
-    end_time TIME,
+    date DATE,
     location VARCHAR(255),
     note TEXT,
     charge DECIMAL(10,2) DEFAULT 0.00,
-    payer INT,
+    start_time TIME,
+    end_time TIME,
+    payer VARCHAR(50),
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     FOREIGN KEY (trip_id) REFERENCES trips(trip_id) ON DELETE CASCADE,
-    FOREIGN KEY (payer) REFERENCES users(user_id) ON DELETE SET NULL
-);
-
--- Add indexes for better query performance
-CREATE INDEX idx_trip_items ON items(trip_id);
-CREATE INDEX idx_item_date ON items(date);
-CREATE INDEX idx_item_payer ON items(payer);
+    INDEX idx_trip_id (trip_id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- Insert sample user data
 INSERT INTO users (username, password) VALUES
@@ -75,3 +71,10 @@ INSERT INTO trip_participants (trip_id, user_id) VALUES
 (3, 2),
 (3, 1);
 
+
+INSERT INTO items (trip_id, name, description, date, location, note, charge, start_time, end_time, payer) VALUES
+(1, 'Visit Eiffel Tower', 'Iconic landmark visit with guided tour', '2024-07-15', 'Paris, France', 'Book evening tour for best views', 25.50, '18:30:00', '20:30:00', 'Alice'),
+(1, 'Louvre Museum', 'Art museum tour', '2024-07-16', 'Paris, France', 'Get skip-the-line tickets', 17.00, '10:00:00', '14:00:00', 'Bob'),
+(1, 'Seine River Cruise', 'Evening dinner cruise', '2024-07-16', 'Seine River, Paris', 'Vegetarian meal requested', 89.00, '19:00:00', '22:00:00', 'Charlie'),
+(2, 'Mount Fuji Tour', 'Day trip to Mount Fuji', '2024-08-01', 'Mount Fuji, Japan', 'Weather dependent', 120.00, '08:00:00', '17:00:00', 'David'),
+(2, 'Sushi Making Class', 'Traditional sushi workshop', '2024-08-02', 'Tokyo, Japan', 'Ingredients included', 75.00, '11:00:00', '13:30:00', 'Eve');
