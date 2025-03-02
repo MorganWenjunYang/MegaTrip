@@ -1,6 +1,6 @@
 import streamlit as st
 from controller.controller import handle_save_trip, handle_cancel_edit, handle_back_to_home
-from model.utils import init_item
+from model.utils import init_item, init_trip
 
 def show_sidebar():
     with st.sidebar:
@@ -74,23 +74,30 @@ def show_trip_expander(trips, context="default"):
                 st.rerun()
 
 
-def edit_trip(trip):
+def edit_trip(trip=None):
         
     # Initialize staged changes in session state if not exists
+    
     if 'staged_trip' not in st.session_state:
-        st.session_state.staged_trip = {
-            'name': trip.name,
-            'destination': trip.destination,
-            'start_date': trip.start_date,
-            'end_date': trip.end_date,
-            'status': trip.status,
-            'note': trip.note,
-            'items': [item.__dict__.copy() for item in trip.items]
-        }
+        if trip is None:
+            st.session_state.staged_trip = init_trip()
+        else:
+            st.session_state.staged_trip = {
+                'name': trip.name,
+                'destination': trip.destination,
+                'start_date': trip.start_date,
+                'end_date': trip.end_date,
+                'status': trip.status,
+                'note': trip.note,
+                'items': [item.__dict__.copy() for item in trip.items]
+            }
     
     staged = st.session_state.staged_trip
 
-    st.header(f"Edit Trip: {trip.name}")
+    if trip is None:
+        st.header("Create New Trip")
+    else:
+        st.header(f"Edit Trip: {trip.name}")
                 
     with st.form("edit_trip_form"):
         new_name = st.text_input("Trip Name", value=staged['name'])
@@ -166,4 +173,7 @@ def edit_trip(trip):
                 handle_cancel_edit()
 
 def create_trip():
-    pass
+    if 'staged_trip' not in st.session_state:
+        st.session_state.staged_trip = init_trip()
+    
+    

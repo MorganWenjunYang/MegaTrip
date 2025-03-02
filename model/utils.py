@@ -100,7 +100,7 @@ def init_trip():
     """Initialize an empty item with default values"""
     return {
         "name": "",
-        "description": "",
+        "destination": "",
         "start_date": datetime.today().date(),
         "end_date": datetime.today().date(),
         "status": "Active",
