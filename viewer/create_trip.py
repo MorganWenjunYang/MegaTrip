@@ -3,22 +3,8 @@ from datetime import datetime, time
 from model.trip import Trip
 from model.item import Item
 from model.trip_manager import TripManager
+from viewer.stutils import init_item
 from viewer.stutils import show_sidebar
-
-def init_item():
-    """Initialize an empty item with default values"""
-    return {
-        "name": "",
-        "description": "",
-        "date": datetime.today().date(),
-        "start_time": time(9, 0),  # Default 9:00 AM
-        "end_time": time(10, 0),   # Default 10:00 AM
-        "location": "",
-        "note": "",
-        "charge": 0.0,
-        "payer": "",
-        "split": {}
-    }
 
 def show_create_trip_page():
     show_sidebar()
@@ -40,7 +26,7 @@ def show_create_trip_page():
         
         status = st.selectbox(
             "Status",
-            options=["Planning", "Ongoing", "Completed", "Cancelled"],
+            options=["Active", "Completed", "Closed"],
             key="status"
         )
         

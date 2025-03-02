@@ -1,28 +1,7 @@
 from model.item import Item
-from model.utils import execute_query
+from model.utils import execute_query, ModelConverter
 
 class ItemManager:
-    
-    @staticmethod
-    def get_items_by_trip(trip_id):
-        """Get all items for a trip from database"""
-        query = """
-            SELECT * FROM items WHERE trip_id = %s
-        """
-        items_data = execute_query(query, (trip_id,))
-        
-        # Convert database records to Item objects
-        items = []
-        for data in items_data:
-            item = Item(
-                item_id=data['item_id'],
-                name=data['name'],
-                quantity=data['quantity'],
-                trip_id=data['trip_id']
-            )
-            items.append(item)
-        
-        return items
     
     @staticmethod
     def create_item(name, quantity, trip_id):

@@ -2,6 +2,8 @@ from datetime import datetime
 from model.trip import Trip
 import streamlit as st
 from model.utils import execute_query, ModelConverter
+from model.user_manager import UserManager
+
 
 class TripManager:
     @staticmethod
@@ -47,9 +49,42 @@ class TripManager:
         # Add participants if any exist
         if data['participants']:
             for participant_id in data['participants'].split(','):
-                trip.add_participant(participant_id)
+                # trip.add_participant(participant_id)
+                p = UserManager.get_user_by_id(participant_id)
+                trip.add_participant(p)
+
+        items = TripManager.get_items_by_trip(trip_id)
+        for item in items:
+            trip.add_item(item) 
                 
         return trip
+    
+    @staticmethod
+    def get_items_by_trip(trip_id):
+        """Get all items for a trip from database"""
+        query = """
+            SELECT * FROM items WHERE trip_id = %s
+        """
+        items_data = execute_query(query, (trip_id,))
+        
+        # Convert database records to Item objects
+        items = []
+        for data in items_data:
+            print(data)
+            item = ModelConverter.to_item(data)
+            items.append(item)
+            print(item.start_time)
+        
+        return items
+    
+    @staticmethod
+    def get_creator(trip_id):
+        """Get the creator of a trip"""
+        query = """
+            SELECT creator_id FROM trips WHERE trip_id = %s
+        """
+        creator_id = execute_query(query, (trip_id,))[0][0]
+        return UserManager.get_user_by_id(creator_id)
     
     @staticmethod
     def create_trip(name, destination, start_date, end_date, creator_id):

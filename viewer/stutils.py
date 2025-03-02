@@ -1,5 +1,6 @@
 import streamlit as st
 from controller.controller import handle_save_trip, handle_cancel_edit, handle_back_to_home
+from model.utils import init_item
 
 def show_sidebar():
     with st.sidebar:
@@ -23,7 +24,7 @@ def show_trip_details(trip):
     if trip.note:
         st.write(f"📝 Note: {trip.note}")
     if trip.participants:
-        st.write(f"👥 Participants: {', '.join(trip.participants)}")
+        st.write(f"👥 Participants: {', '.join([u.username for u in trip.participants])}")
     if trip.items:
         st.write("📋 Items:")
         for item in trip.items:
@@ -47,8 +48,8 @@ def show_trip_short(trip):
                 st.write(f"📌 Status: {trip.status}")  # display status
                 if trip.note:
                     st.write(f"📝 Note: {trip.note}")  # display note if available
-                if trip.participants:
-                    st.write(f"👥 Participants: {', '.join(trip.participants)}")  # display user IDs
+                # if trip.participants:
+                    # st.write(f"👥 Participants: {', '.join(trip.participants)}")  # display user IDs
             with col2:
                 if st.button("View Details", key=f"trip_{trip.trip_id}"):
                     st.session_state.current_trip_id = trip.trip_id
@@ -71,3 +72,89 @@ def show_trip_expander(trips, context="default"):
                 st.session_state.current_trip_id = trip.trip_id
                 st.session_state.page = "trip_details"
                 st.rerun()
+
+
+def edit_trip(trip):
+        
+    # Initialize staged changes in session state if not exists
+    if 'staged_trip' not in st.session_state:
+        st.session_state.staged_trip = {
+            'name': trip.name,
+            'destination': trip.destination,
+            'start_date': trip.start_date,
+            'end_date': trip.end_date,
+            'status': trip.status,
+            'note': trip.note,
+            'items': [item.__dict__.copy() for item in trip.items]
+        }
+    
+    staged = st.session_state.staged_trip
+
+    st.header(f"Edit Trip: {trip.name}")
+                
+    with st.form("edit_trip_form"):
+        new_name = st.text_input("Trip Name", value=staged['name'])
+        new_destination = st.text_input("Destination", value=staged['destination'])
+        col1, col2 = st.columns(2)
+        with col1:
+            new_start_date = st.date_input("Start Date", value=staged['start_date'])
+        with col2:
+            new_end_date = st.date_input("End Date", value=staged['end_date'])
+        
+        new_status = st.selectbox(
+            "Status",
+            options=["Active", "Completed", "Closed"],
+            index=["Active", "Completed", "Closed"].index(staged['status'])
+        )
+        
+        new_note = st.text_area("Notes", value=staged['note'])
+        
+        # Item management
+        # Items section
+        st.subheader("Items")
+        
+        for idx, item in enumerate(staged['items']):
+            with st.container():
+                st.markdown(f"**Item {idx + 1}**")
+                col1, col2 = st.columns(2)
+                with col1:
+                    item["name"] = st.text_input("Name", value=item['name'], key=f"name_{idx}")
+                    item["description"] = st.text_area("Description", value=item['description'], key=f"desc_{idx}", height=100)
+                    item["date"] = st.date_input("Date", value=item['date'], key=f"date_{idx}")
+                with col2:
+                    item["location"] = st.text_input("Location", value=item['location'], key=f"loc_{idx}")
+                    item["note"] = st.text_area("Note", value=item['note'], key=f"note_{idx}", height=100)
+                    item["charge"] = st.number_input("Charge ($)", value=item['charge'], key=f"charge_{idx}")
+                
+                col1, col2, col3 = st.columns(3)
+                with col1:
+                    item["start_time"] = st.time_input("Start Time", value=item['start_time'], key=f"start_{idx}")
+                with col2:
+                    item["end_time"] = st.time_input("End Time", value=item['end_time'], key=f"end_{idx}")
+                with col3:
+                    item["payer"] = st.text_input("Payer", value=item['payer'], key=f"payer_{idx}")
+                
+                col1, col2 = st.columns(2)
+                with col1:
+                    if st.form_submit_button(f"➕ Add Item {idx+1}"):
+                        staged['items'].insert(idx + 1, init_item())
+                        st.rerun()
+                with col2:
+                    if len(staged['items']) > 1 and st.form_submit_button(f"🗑️ Delete Item {idx+1}"):
+                        staged['items'].pop(idx)
+                        st.rerun()
+                
+                st.markdown("---")
+        
+        
+        col1, col2 = st.columns(2)
+        with col1:
+            if st.form_submit_button("Save", ):
+                handle_save_trip(trip, new_name, new_destination, new_start_date, 
+                                new_end_date, new_status, new_note)
+        with col2:
+            if st.form_submit_button("Cancel"):
+                handle_cancel_edit()
+
+def create_trip():
+    pass

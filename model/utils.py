@@ -71,11 +71,26 @@ class ModelConverter:
             name=db_record['name'],
             description=db_record['description'],
             date=db_record['date'],
-            start_time=db_record.get('start_time'),
-            end_time=db_record.get('end_time'),
+            start_time=db_record['start_time'],
+            end_time=db_record['end_time'],
             location=db_record.get('location'),
             note=db_record.get('note'),
             charge=db_record.get('charge', 0.0),
             payer=db_record.get('payer'),
             split=db_record.get('split', {})
         )
+    
+def init_item():
+    """Initialize an empty item with default values"""
+    return {
+        "name": "",
+        "description": "",
+        "date": datetime.today().date(),
+        "start_time": time(9, 0),  # Default 9:00 AM
+        "end_time": time(10, 0),   # Default 10:00 AM
+        "location": "",
+        "note": "",
+        "charge": 0.0,
+        "payer": "",
+        "split": {}
+    }
