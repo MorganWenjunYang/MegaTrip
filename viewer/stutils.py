@@ -54,3 +54,20 @@ def show_trip_short(trip):
                     st.session_state.current_trip_id = trip.trip_id
                     st.session_state.page = "trip_details"
                     st.rerun()
+
+def show_trip_expander(trips, context="default"):
+    for trip in trips:
+        with st.expander(f"🎯 {trip.name} ({trip.destination})"):
+            col1, col2 = st.columns(2)
+            with col1:
+                st.write(f"**Dates:** {trip.start_date} - {trip.end_date}")
+                st.write(f"**Status:** {trip.status}")
+            with col2:
+                if trip.note != '':
+                    st.write(f"**Note:** {trip.note}")
+            
+            # Make key unique by including context
+            if st.button("View Details", key=f"{context}_view_{trip.trip_id}"):
+                st.session_state.current_trip_id = trip.trip_id
+                st.session_state.page = "trip_details"
+                st.rerun()
