@@ -5,6 +5,7 @@ from typing import List, Dict, Any
 from model.user import User
 from model.trip import Trip
 from model.item import Item
+from datetime import datetime, time
 
 def connect_to_db():
     """Create and return a database connection"""
@@ -93,4 +94,16 @@ def init_item():
         "charge": 0.0,
         "payer": "",
         "split": {}
+    }
+
+def init_trip():
+    """Initialize an empty item with default values"""
+    return {
+        "name": "",
+        "description": "",
+        "start_date": datetime.today().date(),
+        "end_date": datetime.today().date(),
+        "status": "Active",
+        "note": "",
+        "items": []
     }

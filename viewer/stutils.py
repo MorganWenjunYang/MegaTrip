@@ -136,20 +136,29 @@ def edit_trip(trip):
                 
                 col1, col2 = st.columns(2)
                 with col1:
-                    if st.form_submit_button(f"➕ Add Item {idx+1}"):
-                        staged['items'].insert(idx + 1, init_item())
-                        st.rerun()
+                    # if st.form_submit_button(f"➕ Add Item {idx+1}"):
+                    #     staged['items'].insert(idx + 1, init_item())
+                    #     st.rerun()
+                    pass
                 with col2:
-                    if len(staged['items']) > 1 and st.form_submit_button(f"🗑️ Delete Item {idx+1}"):
+                    if st.form_submit_button(f"🗑️ Delete Item {idx+1}"):
                         staged['items'].pop(idx)
                         st.rerun()
                 
                 st.markdown("---")
+
+        # Always show an "Add Item" button at the bottom
+        if st.form_submit_button("➕ Add New Item"):
+            staged['items'].append(init_item())
+            st.rerun()
+        
+        # Horizontal line before save/cancel buttons
+        st.markdown("---")
         
         
         col1, col2 = st.columns(2)
         with col1:
-            if st.form_submit_button("Save", ):
+            if st.form_submit_button("Save"):
                 handle_save_trip(trip, new_name, new_destination, new_start_date, 
                                 new_end_date, new_status, new_note)
         with col2:

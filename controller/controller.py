@@ -24,10 +24,14 @@ def handle_save_trip(trip, new_name, new_destination, new_start_date, new_end_da
 
 def handle_cancel_edit():
     st.session_state.edit_mode = False
+    del st.session_state.staged_trip
+    st.rerun()
 
 def handle_back_to_home():
     st.session_state.page = "home"
     st.session_state.current_trip_id = None
+    del st.session_state.staged_trip
+    st.rerun()
 
 # def handle_create_trip(name, destination, start_date, end_date, status, note):
 #     new_trip = Trip(
