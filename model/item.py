@@ -31,19 +31,19 @@ class Item:
             "split": self.split  # include split in details
         }
 
-    def display_in_streamlit(self):
-        """Display item details in Streamlit format"""
-        with st.container():
-            st.subheader(self.name)
-            st.write(f"📅 Date: {self.date}")
-            if self.start_time and self.end_time:
-                st.write(f"⏰ Time: {self.start_time} - {self.end_time}")
-            if self.location:
-                st.write(f"📍 Location: {self.location}")
-            if self.note:
-                st.write(f"📝 Note: {self.note}")
-            st.write(f"💰 Charge: ${self.charge}")
-            if self.payer:
-                st.write(f"💳 Payer: {self.payer}")
-            if self.split:
-                st.write(f"🔄 Split: {self.split}")
+    # def display_in_streamlit(self):
+    #     """Display item details in Streamlit format"""
+    #     with st.container():
+    #         st.subheader(self.name)
+    #         st.write(f"📅 Date: {self.date}")
+    #         if self.start_time and self.end_time:
+    #             st.write(f"⏰ Time: {self.start_time} - {self.end_time}")
+    #         if self.location:
+    #             st.write(f"📍 Location: {self.location}")
+    #         if self.note:
+    #             st.write(f"📝 Note: {self.note}")
+    #         st.write(f"💰 Charge: ${self.charge}")
+    #         if self.payer:
+    #             st.write(f"💳 Payer: {self.payer}")
+    #         if self.split:
+    #             st.write(f"🔄 Split: {self.split}")

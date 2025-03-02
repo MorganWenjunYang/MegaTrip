@@ -1,5 +1,5 @@
 from model.user import User
-from model.utils import execute_query
+from model.utils import execute_query, ModelConverter
 
 class UserManager:
     @staticmethod
@@ -13,7 +13,7 @@ class UserManager:
         if not user_data or len(user_data) == 0:
             return None
         
-        return user_data[0]
+        return ModelConverter.to_user(user_data[0])
         
     @staticmethod
     def get_user_by_id(user_id):
@@ -26,7 +26,7 @@ class UserManager:
         if not user_data or len(user_data) == 0:
             return None
         
-        return user_data[0]
+        return ModelConverter.to_user(user_data[0])
     
     @staticmethod
     def get_user_by_name(username):
@@ -39,7 +39,7 @@ class UserManager:
         if not user_data or len(user_data) == 0:
             return None
         
-        return user_data[0]
+        return ModelConverter.to_user(user_data[0])
     
     @staticmethod
     def create_user(username, password):
