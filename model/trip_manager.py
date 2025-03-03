@@ -87,14 +87,73 @@ class TripManager:
         return UserManager.get_user_by_id(creator_id)
     
     @staticmethod
-    def create_trip(name, destination, start_date, end_date, creator_id):
-        pass
+    def create_trip(staged):
+        """Create a new trip in the database"""
+        query = """
+            INSERT INTO trips (name, destination, start_date, end_date, status, note, creator_id) 
+            VALUES (%s, %s, %s, %s, %s, %s, %s)
+        """
+        trip_id = execute_query(query, (staged['name'], staged['destination'], staged['start_date'],
+                                         staged['end_date'], staged['status'], staged['note'], st.session_state.user_id), fetch=False)
+        
+        # # Add participants
+        # for participant in staged.participants:
+        #     query = """
+        #         INSERT INTO trip_participants (trip_id, user_id) VALUES (%s, %s)
+        #     """
+        #     execute_query(query, (trip_id, participant.user_id), fetch=False)
+        
+        # Add items
+        for item in staged['items']:
+            query = """
+                INSERT INTO items (trip_id, name, description, date, start_time, end_time, 
+                location, note, charge, payer, split) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+            """
+            execute_query(query, (trip_id, item['name'], item['description'], item['date'], item['start_time'], 
+                                  item['end_time'], item['location'], item['note'], item['charge'], 
+                                  item['payer'], item['split']), fetch=False)
+        
+        return trip_id
 
     @staticmethod
     def delete_trip(trip_id):
-        pass
+        """Delete a trip from the database"""
+        query = """
+            DELETE FROM trips WHERE trip_id = %s
+        """
+        execute_query(query, (trip_id,), fetch=False)
 
     @staticmethod
-    def update_trip(trip):
-        pass    
-
+    def update_trip(staged):
+        """Update an existing trip in the database"""
+        query = """
+            UPDATE trips SET name=%s, destination=%s, start_date=%s, end_date=%s, status=%s, note=%s WHERE trip_id=%s
+        """
+        execute_query(query, (staged.name, staged.destination, staged.start_date, staged.end_date, staged.status, staged.note, staged.trip_id), fetch=False)
+        
+        # Update participants
+        query = """
+            DELETE FROM trip_participants WHERE trip_id = %s
+        """
+        execute_query(query, (staged.trip_id,), fetch=False)
+        
+        for participant in staged.participants:
+            query = """
+                INSERT INTO trip_participants (trip_id, user_id) VALUES (%s, %s)
+            """
+            execute_query(query, (staged.trip_id, participant.user_id), fetch=False)
+        
+        # Update items
+        query = """
+            DELETE FROM items WHERE trip_id = %s
+        """
+        execute_query(query, (staged.trip_id,), fetch=False)
+        
+        for item in staged.items:
+            query = """
+                INSERT INTO items (trip_id, name, description, date, start_time, end_time, 
+                location, note, charge, payer, split) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+            """
+            execute_query(query, (staged.trip_id, item.name, item.description, item.date, item.start_time, item.end_time,
+                                  item.location, item.note, item.charge, item.payer, item.split), fetch=False)
+        

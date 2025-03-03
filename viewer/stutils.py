@@ -1,5 +1,5 @@
 import streamlit as st
-from controller.controller import handle_save_trip, handle_cancel_edit, handle_back_to_home
+from controller.controller import handle_save_trip, handle_cancel_edit, handle_back_to_home, handle_update_trip
 from model.utils import init_item, init_trip
 
 def show_sidebar():
@@ -100,13 +100,13 @@ def edit_trip(trip=None):
         st.header(f"Edit Trip: {trip.name}")
                 
     with st.form("edit_trip_form"):
-        new_name = st.text_input("Trip Name", value=staged['name'])
-        new_destination = st.text_input("Destination", value=staged['destination'])
+        staged['name'] = st.text_input("Trip Name", value=staged['name'])
+        staged['destination'] = st.text_input("Destination", value=staged['destination'])
         col1, col2 = st.columns(2)
         with col1:
-            new_start_date = st.date_input("Start Date", value=staged['start_date'])
+            staged['start_date'] = st.date_input("Start Date", value=staged['start_date'])
         with col2:
-            new_end_date = st.date_input("End Date", value=staged['end_date'])
+            staged['end_date'] = st.date_input("End Date", value=staged['end_date'])
         
         new_status = st.selectbox(
             "Status",
@@ -166,14 +166,13 @@ def edit_trip(trip=None):
         col1, col2 = st.columns(2)
         with col1:
             if st.form_submit_button("Save"):
-                handle_save_trip(trip, new_name, new_destination, new_start_date, 
-                                new_end_date, new_status, new_note)
+                if trip is None:
+                    handle_save_trip(staged)
+                else:
+                    handle_update_trip(staged)
         with col2:
             if st.form_submit_button("Cancel"):
                 handle_cancel_edit()
 
-def create_trip():
-    if 'staged_trip' not in st.session_state:
-        st.session_state.staged_trip = init_trip()
     
     
