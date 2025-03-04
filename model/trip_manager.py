@@ -129,31 +129,33 @@ class TripManager:
         query = """
             UPDATE trips SET name=%s, destination=%s, start_date=%s, end_date=%s, status=%s, note=%s WHERE trip_id=%s
         """
-        execute_query(query, (staged.name, staged.destination, staged.start_date, staged.end_date, staged.status, staged.note, staged.trip_id), fetch=False)
+        execute_query(query, (staged['name'], staged['destination'], staged['start_date'], 
+                              staged['end_date'], staged['status'], staged['note'], st.session_state.current_trip_id), fetch=False)
         
-        # Update participants
-        query = """
-            DELETE FROM trip_participants WHERE trip_id = %s
-        """
-        execute_query(query, (staged.trip_id,), fetch=False)
+        # # Update participants
+        # query = """
+        #     DELETE FROM trip_participants WHERE trip_id = %s
+        # """
+        # execute_query(query, (staged.trip_id,), fetch=False)
         
-        for participant in staged.participants:
-            query = """
-                INSERT INTO trip_participants (trip_id, user_id) VALUES (%s, %s)
-            """
-            execute_query(query, (staged.trip_id, participant.user_id), fetch=False)
+        # for participant in staged.participants:
+        #     query = """
+        #         INSERT INTO trip_participants (trip_id, user_id) VALUES (%s, %s)
+        #     """
+        #     execute_query(query, (staged.trip_id, participant.user_id), fetch=False)
         
         # Update items
         query = """
             DELETE FROM items WHERE trip_id = %s
         """
-        execute_query(query, (staged.trip_id,), fetch=False)
+        execute_query(query, (st.session_state.current_trip_id,), fetch=False)
         
-        for item in staged.items:
+        for item in staged['items']:
             query = """
                 INSERT INTO items (trip_id, name, description, date, start_time, end_time, 
                 location, note, charge, payer, split) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
             """
-            execute_query(query, (staged.trip_id, item.name, item.description, item.date, item.start_time, item.end_time,
-                                  item.location, item.note, item.charge, item.payer, item.split), fetch=False)
+            execute_query(query, (st.session_state.current_trip_id, item['name'], item['description'], item['date'], 
+                                  item['start_time'], item['end_time'], item['location'], item['note'],
+                                    item['charge'], item['payer'], item['split']), fetch=False)
         

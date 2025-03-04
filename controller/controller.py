@@ -12,8 +12,7 @@ def handle_back_to_home():
     del st.session_state.staged_trip
     st.rerun()
 
-def handle_save_trip(staged):
-    print(staged)
+def handle_input_check(staged):
     if not staged:
         st.warning("Please fill in all required fields")
         return
@@ -30,74 +29,35 @@ def handle_save_trip(staged):
         st.warning("Please enter a destination")
         return
 
-    # if not staged[create]]:
-    #     st.warning("Please enter a creator")
-    #     return
-
     if not staged['status']:
         st.warning("Please enter a status")
         return
 
-    # if not staged['note']:
-    #     st.warning("Please enter a note")
-    #     return
+    return True
 
-    # if not staged[par]:
-    #     st.warning("Please enter a participant")
-    #     return
+def handle_save_trip(staged):
 
-      
-    # if st.session_state.edit_mode:
-    #     TripManager.update_trip(staged)
-    # else:
+    if not handle_input_check(staged):
+        return
+
     TripManager.create_trip(staged)
 
     st.session_state.edit_mode = False
     del st.session_state.staged_trip
     st.session_state.page = "home"
+    st.session_state.current_trip_id = None
     st.rerun()
 
 def handle_update_trip(staged):
-    if not staged:
-        st.warning("Please fill in all required fields")
-        return
 
-    if not staged.start_date or not staged.end_date:
-        st.warning("Please select a start and end date")
-        return
-
-    if staged.start_date > staged.end_date:
-        st.warning("End date must be after start date")
-        return
-
-    if not staged.destination:
-        st.warning("Please enter a destination")
-        return
-
-    if not staged.creator:
-        st.warning("Please enter a creator")
-        return
-
-    if not staged.status:
-        st.warning("Please enter a status")
-        return
-
-    if not staged.note:
-        st.warning("Please enter a note")
-        return
-
-    if not staged.participants:
-        st.warning("Please enter a participant")
-        return
-
-    if not staged.items:
-        st.warning("Please enter an item")
+    if not handle_input_check(staged):
         return
 
     TripManager.update_trip(staged)
     st.session_state.edit_mode = False
     del st.session_state.staged_trip
     st.session_state.page = "home"
+    st.session_state.current_trip_id = None
     st.rerun()
 
 def handle_save_item():
