@@ -8,10 +8,11 @@ services:
     environment:
       MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
       MYSQL_DATABASE: megatrip
-      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_USER: ${MYSQL_USER:-megatrip_user}
       MYSQL_PASSWORD: ${MYSQL_PASSWORD}
     volumes:
       - mysql_data:/var/lib/mysql
+      - ./database:/docker-entrypoint-initdb.d
     ports:
       - "3306:3306"
     networks:
@@ -19,11 +20,11 @@ services:
 
   # Streamlit Application Service
   web:
-    build: .
+    image: registry.yourdomain.com/megatrip:latest
     restart: always
     environment:
       DB_HOST: db
-      DB_USER: ${MYSQL_USER}
+      DB_USER: ${MYSQL_USER:-megatrip_user}
       DB_PASSWORD: ${MYSQL_PASSWORD}
       DB_NAME: megatrip
     ports:
