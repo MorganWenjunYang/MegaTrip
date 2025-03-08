@@ -28,7 +28,7 @@ jobs:
           context: .
           file: Dockerfile
           push: true
-          tags: registry.cn-your-region.aliyuncs.com/your-namespace/your-image:latest
+          tags: ${{secrets.ALIYUN_REGISTRY}}/${{secrets.ALIYUN_NAMESPACE}}/megatrip:latest
 
       - name: Trigger remote server deployment
         run: |
