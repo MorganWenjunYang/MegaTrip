@@ -6,6 +6,7 @@ services:
     image: mysql:8.0
     restart: always
     environment:
+      MYSQL_HOST: db
       MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
       MYSQL_DATABASE: megatrip
       MYSQL_USER: ${MYSQL_USER:-megatrip_user}
@@ -24,10 +25,10 @@ services:
     platform: linux/amd64
     restart: always
     environment:
-      DB_HOST: db
-      DB_USER: ${MYSQL_USER:-megatrip_user}
-      DB_PASSWORD: ${MYSQL_PASSWORD}
-      DB_NAME: megatrip
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: megatrip
+      MYSQL_USER: ${MYSQL_USER:-megatrip_user}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
     ports:
       - "8501:8501"
     depends_on:

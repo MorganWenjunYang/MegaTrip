@@ -1,7 +1,11 @@
 import os
 from dotenv import load_dotenv
 
-load_dotenv()
+# Load .env file only if it exists (i.e., when running locally)
+if os.path.exists('.env'):
+    load_dotenv()
+
+# otherwise, use the environment variables defined in the Dockerfile/Compose file
 
 DB_CONFIG = {
     'host': os.getenv('MYSQL_HOST', 'localhost'),
