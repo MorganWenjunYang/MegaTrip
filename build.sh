@@ -21,12 +21,25 @@ TAG="latest"
 # Login to Docker Hub (first time only)
 # docker login
 
-# Build the image
-docker build -t $DOCKER_USERNAME/$IMAGE_NAME:$TAG .
+# docker buildx create --use
+# docker buildx build --platform linux/amd64 -t $DOCKER_USERNAME/$IMAGE_NAME:$TAG .
 
-# Push to aliyun registry
-docker tag $DOCKER_USERNAME/$IMAGE_NAME:$TAG $DOCKER_PATH/$DOCKER_REGISTRY:$TAG
+# echo "Successfully built $DOCKER_USERNAME/$IMAGE_NAME:$TAG"
 
-docker push $DOCKER_PATH/$DOCKER_REGISTRY:$TAG
+docker buildx inspect mybuilder >/dev/null 2>&1 || docker buildx create --name mybuilder
+docker buildx use mybuilder
+docker buildx build --platform linux/amd64 \
+--build-arg BUILDPLATFORM=linux/amd64 \
+--build-arg TARGETPLATFORM=linux/amd64 \
+ -t $DOCKER_PATH/$DOCKER_REGISTRY:$TAG \
+ --push .
+docker buildx rm mybuilder
 
 echo "Successfully built and pushed $DOCKER_PATH/$DOCKER_REGISTRY:$TAG"
+
+# # Push to aliyun registry
+# docker tag $DOCKER_USERNAME/$IMAGE_NAME:$TAG $DOCKER_PATH/$DOCKER_REGISTRY:$TAG
+
+# docker push $DOCKER_PATH/$DOCKER_REGISTRY:$TAG
+
+# echo "Successfully built and pushed $DOCKER_PATH/$DOCKER_REGISTRY:$TAG"

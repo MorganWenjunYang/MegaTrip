@@ -21,6 +21,7 @@ services:
   # Streamlit Application Service
   web:
     image: registry.yourdomain.com/megatrip:latest
+    platform: linux/amd64
     restart: always
     environment:
       DB_HOST: db
