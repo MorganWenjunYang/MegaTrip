@@ -16,6 +16,9 @@ if 'username' not in st.session_state:
     st.session_state.username = None
 if 'user_id' not in st.session_state: 
     st.session_state.user_id = None
+if 'staged_trip' not in st.session_state: 
+    st.session_state.staged_trip = None
+
 
 st.logo(
     "./assets/logo.jpg",

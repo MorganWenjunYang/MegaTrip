@@ -21,10 +21,11 @@ services:
 
   # Streamlit Application Service
   web:
-    image: registry.yourdomain.com/megatrip:latest
+    image: ${DOCKER_REGISTRY}/${DOCKER_NAMESPACE}/${DOCKER_REPOSITORY}:latest 
     platform: linux/amd64
     restart: always
     environment:
+      MYSQL_HOST: db
       MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
       MYSQL_DATABASE: megatrip
       MYSQL_USER: ${MYSQL_USER:-megatrip_user}
