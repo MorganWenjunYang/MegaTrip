@@ -30,6 +30,8 @@ jobs:
           file: Dockerfile
           push: true
           tags: ${{secrets.ALIYUN_REGISTRY}}/${{secrets.ALIYUN_NAMESPACE}}/megatrip:latest
+          build-args: |
+            BUILDKIT_PROGRESS=plain  # Enable verbose logging
 
       - name: Trigger remote server deployment
         run: |
