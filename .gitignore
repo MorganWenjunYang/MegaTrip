@@ -1,2 +1,6 @@
 /venv
 .env
+.gitignore
+.dockerignore
+.vscode/
+.idea/
