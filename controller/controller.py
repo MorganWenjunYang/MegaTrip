@@ -10,6 +10,8 @@ def handle_back_to_home():
     st.session_state.page = "home"
     st.session_state.current_trip_id = None
     del st.session_state.staged_trip
+    if 'edit_mode' in st.session_state:
+        del st.session_state.edit_mode
     st.rerun()
 
 def handle_input_check(staged):

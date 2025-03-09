@@ -6,8 +6,9 @@ def show_sidebar():
     with st.sidebar:
         st.header("Navigation")
         if st.button("Home", key="home", use_container_width=True):
-            st.session_state.page = None
-            st.rerun()
+            # st.session_state.page = None
+            # st.rerun()
+            handle_back_to_home()
         if st.button("Profile", key="profile", use_container_width=True):
             st.session_state.page = "profile"
             st.rerun()
@@ -107,13 +108,13 @@ def edit_trip(trip=None):
         with col2:
             staged['end_date'] = st.date_input("End Date", value=staged['end_date'])
         
-        new_status = st.selectbox(
+        staged['status'] = st.selectbox(
             "Status",
             options=["Active", "Completed", "Closed"],
             index=["Active", "Completed", "Closed"].index(staged['status'])
         )
         
-        new_note = st.text_area("Notes", value=staged['note'])
+        staged['note'] = st.text_area("Notes", value=staged['note'])
         
         # Item management
         # Items section
