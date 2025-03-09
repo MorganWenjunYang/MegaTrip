@@ -43,6 +43,7 @@ jobs:
          
             cd /home/${{ secrets.REMOTE_USER }}/megatrip
             docker-compose down
+            docker image prune -f # remove all unused images
             docker-compose pull
             docker-compose up -d
           EOF
