@@ -35,7 +35,7 @@ jobs:
 
       - name: Trigger remote server deployment
         run: |
-          echo "${{ secrets.SSH_PRIVATE_KEY }}" > private_key
+          echo "${{ secrets.REMOTE_KEY }}" > private_key
           chmod 600 private_key
           ssh -i private_key -o StrictHostKeyChecking=no ${{ secrets.REMOTE_USER }}@${{ secrets.REMOTE_IP }} << 'EOF'
             cd /path/to/your/project
