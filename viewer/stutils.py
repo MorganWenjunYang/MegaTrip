@@ -78,19 +78,18 @@ def edit_trip(trip=None):
         
     # Initialize staged changes in session state if not exists
     
-    if 'staged_trip' not in st.session_state:
-        if trip is None:
-            st.session_state.staged_trip = init_trip()
-        else:
-            st.session_state.staged_trip = {
-                'name': trip.name,
-                'destination': trip.destination,
-                'start_date': trip.start_date,
-                'end_date': trip.end_date,
-                'status': trip.status,
-                'note': trip.note,
-                'items': [item.__dict__.copy() for item in trip.items]
-            }
+    if trip is None:
+        st.session_state.staged_trip = init_trip()
+    else:
+        st.session_state.staged_trip = {
+            'name': trip.name,
+            'destination': trip.destination,
+            'start_date': trip.start_date,
+            'end_date': trip.end_date,
+            'status': trip.status,
+            'note': trip.note,
+            'items': [item.__dict__.copy() for item in trip.items]
+        }
     
     staged = st.session_state.staged_trip
 
