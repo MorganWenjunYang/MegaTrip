@@ -19,19 +19,31 @@ services:
     networks:
       - megatrip-network
 
-  # Streamlit Application Service
+  # Web Application Service with Nginx and Gunicorn
   web:
     image: ${DOCKER_REGISTRY}/${DOCKER_NAMESPACE}/${DOCKER_REPOSITORY}:latest 
     platform: linux/amd64
     restart: always
     environment:
+      # MySQL Configuration
       MYSQL_HOST: db
       MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
       MYSQL_DATABASE: megatrip
       MYSQL_USER: ${MYSQL_USER:-megatrip_user}
       MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+      # Nginx Configuration
+      NGINX_MAX_BODY_SIZE: ${NGINX_MAX_BODY_SIZE:-10M}
+      NGINX_PROXY_READ_TIMEOUT: ${NGINX_PROXY_READ_TIMEOUT:-86400}
     ports:
-      - "8501:8501"
+      - "8501:8501"  # Map container's port 8501 to host's port 8501
+    volumes:
+      - ./logs:/var/log  # For Nginx and Gunicorn logs
+      - ./static:/app/static  # For serving static files
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8501/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
     depends_on:
       - db
     networks:
