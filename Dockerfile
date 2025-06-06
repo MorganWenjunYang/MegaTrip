@@ -56,7 +56,7 @@ mv /etc/nginx/nginx.conf.tmp /etc/nginx/nginx.conf\n\
 nginx &\n\
 \n\
 # Start Streamlit\n\
-streamlit run main.py --server.port=8501 --server.address=127.0.0.1\n\
+streamlit run main.py --server.port=8000 --server.address=127.0.0.1\n\
 ' > /app/start.sh && chmod +x /app/start.sh
 
 # Expose port
