@@ -37,9 +37,11 @@ jobs:
         run: |
           echo "${{ secrets.REMOTE_KEY }}" > private_key
           chmod 600 private_key
-          scp -i private_key -o docker-compose.yaml ${{ secrets.REMOTE_USER }}@${{ secrets.REMOTE_IP }}:/home/${{ secrets.REMOTE_USER }}/megatrip/docker-compose.yaml
-          chmod 755 /home/${{ secrets.REMOTE_USER }}/megatrip/docker-compose.yaml
+          scp -i private_key -o StrictHostKeyChecking=no docker-compose.yaml ${{ secrets.REMOTE_USER }}@${{ secrets.REMOTE_IP }}:/home/${{ secrets.REMOTE_USER }}/megatrip/
           ssh -i private_key -o StrictHostKeyChecking=no ${{ secrets.REMOTE_USER }}@${{ secrets.REMOTE_IP }} << 'EOF'
+            # Set proper permissions for docker-compose.yaml
+            chmod 644 /home/${{ secrets.REMOTE_USER }}/megatrip/docker-compose.yaml
+            
             # Log in to Aliyun Registry on the remote server
             echo "${{ secrets.ALIYUN_PASSWORD }}" | docker login ${{ secrets.ALIYUN_REGISTRY }} -u ${{ secrets.ALIYUN_USERNAME }} --password-stdin
          
