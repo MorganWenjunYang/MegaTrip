@@ -71,7 +71,7 @@ mv /etc/nginx/nginx.conf.tmp /etc/nginx/nginx.conf\n\
 nginx &\n\
 \n\
 # Start Gunicorn\n\
-gunicorn -c gunicorn_config.py app:app\n\
+gunicorn -c gunicorn_config.py wsgi:app\n\
 ' > /app/start.sh && chmod +x /app/start.sh
 
 # Expose port 80
