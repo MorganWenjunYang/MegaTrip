@@ -4,7 +4,7 @@ import os
 
 def create_streamlit_app():
     # Create and start streamlit server
-    server = Server()
+    server = Server(main_script_path="main.py", is_hello=False)
     
     # Configure the server
     server._start_server = lambda *args, **kwargs: None  # Prevent auto-start
