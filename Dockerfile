@@ -21,6 +21,7 @@ FROM --platform=$TARGETPLATFORM public.ecr.aws/docker/library/python:3.9-slim
 RUN apt-get update && apt-get install -y \
     nginx \
     curl \
+    gettext-base \ # Added for envsubst
     default-libmysqlclient-dev \
     && rm -rf /var/lib/apt/lists/*
 
@@ -31,7 +32,8 @@ WORKDIR /app
 COPY --from=builder /app/wheels /app/wheels
 COPY requirements.txt .
 RUN pip install --no-cache-dir --no-index --find-links=/app/wheels -r requirements.txt \
-    && rm -rf /app/wheels
+    && rm -rf /app/wheels \
+    & ln -s /usr/local/bin/gunicorn /usr/bin/gunicorn  # Ensure gunicorn is in PATH
 
 # Copy Gunicorn config
 COPY gunicorn_config.py .
