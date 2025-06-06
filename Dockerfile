@@ -32,8 +32,7 @@ WORKDIR /app
 COPY --from=builder /app/wheels /app/wheels
 COPY requirements.txt .
 RUN pip install --no-cache-dir --no-index --find-links=/app/wheels -r requirements.txt \
-    && rm -rf /app/wheels \
-    & ln -s /usr/local/bin/gunicorn /usr/bin/gunicorn  # Ensure gunicorn is in PATH
+    && rm -rf /app/wheels
 
 # Copy Gunicorn config
 COPY gunicorn_config.py .
