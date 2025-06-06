@@ -23,7 +23,8 @@ RUN apt-get update && apt-get install -y \
     curl \
     gettext-base \
     default-libmysqlclient-dev \
-    && rm -rf /var/lib/apt/lists/*
+    && rm -rf /var/lib/apt/lists/* \
+    && useradd -r nginx  # Create nginx user
 
 # Set working directory
 WORKDIR /app
@@ -44,7 +45,15 @@ COPY . .
 COPY nginx.conf /etc/nginx/nginx.conf
 RUN mkdir -p /var/log/nginx && \
     mkdir -p /var/log/gunicorn && \
-    mkdir -p /run
+    mkdir -p /run && \
+    mkdir -p logs && \
+    chown -R nginx:nginx /var/log/nginx && \
+    chown -R nginx:nginx /run && \
+    chown -R www-data:www-data /var/log/gunicorn && \
+    chown -R www-data:www-data logs && \
+    chmod 755 /var/log/nginx && \
+    chmod 755 /var/log/gunicorn && \
+    chmod 755 logs
 
 # Create startup script with environment variable substitution
 RUN echo '#!/bin/bash\n\
