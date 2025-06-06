@@ -57,8 +57,12 @@ RUN mkdir -p /var/log/nginx && \
 
 # Create startup script with environment variable substitution
 RUN echo '#!/bin/bash\n\
+# Set default values for environment variables\n\
+export NGINX_MAX_BODY_SIZE=${NGINX_MAX_BODY_SIZE:-10M}\n\
+export NGINX_PROXY_READ_TIMEOUT=${NGINX_PROXY_READ_TIMEOUT:-86400}\n\
+\n\
 # Replace environment variables in nginx.conf\n\
-envsubst "\$NGINX_SERVER_NAME \$NGINX_MAX_BODY_SIZE \$NGINX_PROXY_READ_TIMEOUT" < /etc/nginx/nginx.conf > /etc/nginx/nginx.conf.tmp \n\
+envsubst "\$NGINX_MAX_BODY_SIZE \$NGINX_PROXY_READ_TIMEOUT" < /etc/nginx/nginx.conf > /etc/nginx/nginx.conf.tmp \n\
 mv /etc/nginx/nginx.conf.tmp /etc/nginx/nginx.conf\n\
 \n\
 # Start Nginx\n\
