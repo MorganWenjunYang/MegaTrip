@@ -35,34 +35,19 @@ COPY requirements.txt .
 RUN pip install --no-cache-dir --no-index --find-links=/app/wheels -r requirements.txt \
     && rm -rf /app/wheels
 
-# Copy Gunicorn config
-COPY gunicorn_config.py .
-
 # Copy application code
 COPY . .
 
 # Copy and setup Nginx configuration
 COPY nginx.conf /etc/nginx/nginx.conf
 RUN mkdir -p /var/log/nginx && \
-    mkdir -p /var/log/gunicorn && \
     mkdir -p /run && \
-    mkdir -p logs && \
     chown -R nginx:nginx /var/log/nginx && \
     chown -R nginx:nginx /run && \
-    chown -R www-data:www-data /var/log/gunicorn && \
-    chown -R www-data:www-data logs && \
-    chmod 755 /var/log/nginx && \
-    chmod 755 /var/log/gunicorn && \
-    chmod 755 logs
+    chmod 755 /var/log/nginx
 
-# Create startup script with environment variable substitution
+# Create startup script
 RUN echo '#!/bin/bash\n\
-# Create log directories if they don't exist\n\
-mkdir -p /var/log/nginx\n\
-mkdir -p /var/log/gunicorn\n\
-chown -R www-data:www-data /var/log/gunicorn\n\
-chmod 755 /var/log/gunicorn\n\
-\n\
 # Replace environment variables in nginx.conf\n\
 envsubst "\$NGINX_MAX_BODY_SIZE \$NGINX_PROXY_READ_TIMEOUT" < /etc/nginx/nginx.conf > /etc/nginx/nginx.conf.tmp \n\
 mv /etc/nginx/nginx.conf.tmp /etc/nginx/nginx.conf\n\
@@ -70,12 +55,12 @@ mv /etc/nginx/nginx.conf.tmp /etc/nginx/nginx.conf\n\
 # Start Nginx\n\
 nginx &\n\
 \n\
-# Start Gunicorn\n\
-gunicorn -c gunicorn_config.py wsgi:app\n\
+# Start Streamlit\n\
+streamlit run main.py --server.port=8501 --server.address=127.0.0.1\n\
 ' > /app/start.sh && chmod +x /app/start.sh
 
-# Expose port 80
-EXPOSE 80
+# Expose port
+EXPOSE 8501
 
-# Start Nginx and Gunicorn
+# Start Nginx and Streamlit
 CMD ["/app/start.sh"]

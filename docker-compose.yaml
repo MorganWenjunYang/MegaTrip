@@ -19,7 +19,7 @@ services:
     networks:
       - megatrip-network
 
-  # Web Application Service with Nginx and Gunicorn
+  # Web Application Service with Nginx and Streamlit
   web:
     image: ${DOCKER_REGISTRY}/${DOCKER_NAMESPACE}/${DOCKER_REPOSITORY}:latest 
     platform: linux/amd64
@@ -35,9 +35,9 @@ services:
       NGINX_MAX_BODY_SIZE: ${NGINX_MAX_BODY_SIZE:-10M}
       NGINX_PROXY_READ_TIMEOUT: ${NGINX_PROXY_READ_TIMEOUT:-86400}
     ports:
-      - "8501:8501"  # Map container's port 8501 to host's port 8501
+      - "${PORT:-8501}:8501"  # Map container's port 8501 to configurable host port
     volumes:
-      - ./logs:/var/log  # For Nginx and Gunicorn logs
+      - ./logs:/var/log/nginx  # For Nginx logs
       - ./static:/app/static  # For serving static files
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8501/health"]
