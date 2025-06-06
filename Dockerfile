@@ -21,7 +21,7 @@ FROM --platform=$TARGETPLATFORM public.ecr.aws/docker/library/python:3.9-slim
 RUN apt-get update && apt-get install -y \
     nginx \
     curl \
-    gettext-base \ # Added for envsubst
+    gettext-base \
     default-libmysqlclient-dev \
     && rm -rf /var/lib/apt/lists/*
 
