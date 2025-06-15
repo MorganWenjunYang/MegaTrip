@@ -1,6 +1,5 @@
 import streamlit as st
-from model.trip import Trip
-from model.trip_manager import TripManager
+from api_client import api_client
 from viewer.stutils import show_sidebar, show_trip_short
 
 def show_home_page():
@@ -16,7 +15,7 @@ def show_home_page():
 def show_recent_trips():
     st.header("Recent Trips")
     
-    recent_trips = TripManager.get_recent_trips()  # Fetch recent trips from trip_manager
+    recent_trips = api_client.get_recent_trips()  # Use API client instead of TripManager
     
     if not recent_trips:
         st.write("No trips found.")

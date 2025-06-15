@@ -1,7 +1,5 @@
 import streamlit as st
-from model.trip_manager import TripManager
-from model.user_manager import UserManager
-from model.utils import execute_query
+from api_client import api_client
 from viewer.home import show_sidebar
 from viewer.stutils import show_trip_expander
 
@@ -25,7 +23,7 @@ def show_profile_page():
 def show_created_trips():
     st.subheader("Trips You Created")
 
-    trips = UserManager.get_created_trips(st.session_state.user_id)  # Use the get_created_trips method from UserManager
+    trips = api_client.get_user_created_trips(st.session_state.user_id)  # Use API client instead of UserManager
     if not trips:
         st.write("You haven't created any trips yet.")
         return
@@ -35,7 +33,7 @@ def show_created_trips():
 def show_participated_trips():
     st.subheader("Trips You're Participating In")
 
-    trips = UserManager.get_participated_trips(st.session_state.user_id)  # Use the get_participated_trips method from UserManager
+    trips = api_client.get_user_participated_trips(st.session_state.user_id)  # Use API client instead of UserManager
     
     if not trips:
         st.write("You're not participating in any trips created by others.")
