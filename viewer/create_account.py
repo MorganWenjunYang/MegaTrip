@@ -1,6 +1,5 @@
 import streamlit as st
-from model.utils import execute_query
-from model.user_manager import UserManager
+from api_client import api_client
 
 def show_create_account_page():
     # Title and welcome message
@@ -17,14 +16,12 @@ def show_create_account_page():
 
     if create_account_button:
         if new_username and new_password:
-            user = UserManager.get_user_by_name(new_username)
-            if user:
-                st.error("Username already exists")
-            else:
-                user_id = UserManager.create_user(new_username, new_password)
+            user_result = api_client.create_user(new_username, new_password)
+            if user_result:
                 st.success("Account created for {}".format(new_username))
                 st.session_state.page = "login"
                 st.rerun()
+            # Error handling is done in api_client._handle_response
         else:
             st.error("Please enter a valid username and password")
 

@@ -1,6 +1,5 @@
 import streamlit as st
-from model.utils import execute_query
-from model.user_manager import UserManager
+from api_client import api_client
 
 def show_login_page():
     form_container = st.sidebar.empty()
@@ -16,15 +15,18 @@ def show_login_page():
         create_new_button = st.sidebar.button("New User?", use_container_width=True)
 
     if login_button:
-        user = UserManager.get_user(username, password)
-        if user:
-            st.session_state.logged_in = True
-            st.session_state.username = username
-            st.session_state.user_id = user.user_id
-            st.success("Logged in as {}".format(username))
-            st.rerun()
+        if username and password:
+            login_result = api_client.login(username, password)
+            if login_result:
+                user = login_result["user"]
+                st.session_state.logged_in = True
+                st.session_state.username = username
+                st.session_state.user_id = user["user_id"]
+                st.success("Logged in as {}".format(username))
+                st.rerun()
+            # Error handling is done in api_client._handle_response
         else:
-            st.error("Invalid username or password")
+            st.error("Please enter both username and password")
 
     if create_new_button:
         st.session_state.page = "create_account"
