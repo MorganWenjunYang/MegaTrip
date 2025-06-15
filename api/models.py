@@ -1,5 +1,4 @@
-from sqlalchemy import Column, Integer, String, Text, Date, Time, DateTime, ForeignKey, Table, Enum
-from sqlalchemy.types import Decimal
+from sqlalchemy import Column, Integer, String, Text, Date, Time, DateTime, ForeignKey, Table, Enum, Numeric
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql import func
 from .database import Base
@@ -52,7 +51,7 @@ class Item(Base):
     date = Column(Date)
     location = Column(String(255))
     note = Column(Text)
-    charge = Column(Decimal(10, 2), default=0.00)
+    charge = Column(Numeric(10, 2), default=0.00)
     start_time = Column(Time)
     end_time = Column(Time)
     payer = Column(String(50))
